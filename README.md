@@ -1,3 +1,4 @@
+
 # 📸 InstaClone
 
 A full-stack social media application inspired by Instagram. Built with **React**, **Express.js**, **MongoDB**, and **Tailwind CSS**, it supports posts, comments, likes, chat, stories, bookmarks, follow/unfollow, blocking, and more.
@@ -6,7 +7,7 @@ A full-stack social media application inspired by Instagram. Built with **React*
 
 ## 🔗 Live Demo
 
-👉 [InstaClone on Vercel](https://insta-clone27.vercel.app) 
+👉 [InstaClone on Vercel](https://insta-clone27.vercel.app)
 
 ---
 
@@ -71,18 +72,15 @@ Create a `.env` file in both `Backend/` and `Frontend/` folders.
 
 ### Backend `.env`
 
-```
 PORT=8000
 MONGO_URL=your_mongodb_uri
 JWT_SECRET=your_jwt_secret
 CLOUDINARY_CLOUD_NAME=your_cloud_name
 CLOUDINARY_API_KEY=your_api_key
 CLOUDINARY_API_SECRET=your_api_secret
-```
 
 ### Frontend `.env`
 
-```
 VITE_API_BASE_URL=http://localhost:8000/api/v1
 VITE_SOCKET_URL=http://localhost:8000
 ```
@@ -116,17 +114,16 @@ npm run dev
 
 ---
 
-## 📌 Author
+### 📌 Author
 
-**Khushbu Parmar**
-📍 Ahmedabad, Gujarat
-🎓 MSc(IT) @ K.S. School of Business Management and IT
-🌐 [LinkedIn](https://www.linkedin.com/in/khushbu-parmar-a98606315/)
-💻 [GitHub](https://github.com/khushbu2784)
+**Khushbu Parmar**  
+📍 Ahmedabad, Gujarat  
+🎓 MSc(IT) @ K.S. School of Business Management and IT  
+🌐 [LinkedIn](https://www.linkedin.com/in/khushbu-parmar-a98606315/)  
+💻 [GitHub](https://github.com/khushbu2784)  
 📧 [khushbuparmar27804@gmail.com](mailto:khushbuparmar27804@gmail.com)
 
 ---
 
 ## 🌟 Star this repo if you like the project!
 
-```
