@@ -20,6 +20,12 @@ const storySchema = new mongoose.Schema({
     expires: "24h",
     default: Date.now,
   },
+  viewedBy: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+  ],
 });
 
 export const Story = mongoose.model("Story", storySchema);

@@ -9,7 +9,7 @@ const conversationSchema = new mongoose.Schema({
   ],
   message: [
     {
-      type: mongoose.Schema.Types.ObjectId, // ✅ Fixed: now correct type for populate
+      type: mongoose.Schema.Types.ObjectId,
       ref: "Message",
     },
   ],

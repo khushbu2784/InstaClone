@@ -137,6 +137,7 @@ const CommentDialog = ({ open, setOpen }) => {
                 <Avatar>
                   <AvatarImage
                     src={selectedPost?.author?.profilePicture || noProfile}
+                    className="object-cover"
                   />
                   <AvatarFallback></AvatarFallback>
                 </Avatar>
@@ -186,7 +187,7 @@ const CommentDialog = ({ open, setOpen }) => {
           <div className="p-4 border-t border-gray-300 dark:border-gray-700">
             <div className="flex items-center gap-2">
               <Avatar className="w-8 h-8 sm:w-10 sm:h-10">
-                <AvatarImage src={user.profilePicture || noProfile} />
+                <AvatarImage src={user.profilePicture || noProfile} className="object-cover"/>
                 <AvatarFallback />
               </Avatar>
               <input

@@ -8,6 +8,7 @@ import useFollowUnfollow from "@/hooks/useFollowUnfollow";
 import { Button } from "./ui/button";
 import { useSelector } from "react-redux";
 import axios from "axios";
+import { toast } from "sonner";
 
 const UserListDialog = ({
   visible,
@@ -52,6 +53,7 @@ const UserListDialog = ({
       );
 
       const data = res.data;
+      toast.success(data.message || "Follower removed successfully");
 
       if (res.status === 200) {
         if (typeof refetchList === "function") {
@@ -66,6 +68,7 @@ const UserListDialog = ({
       }
     } catch (err) {
       console.error("Error removing follower:", err);
+      toast.error(err.response?.data?.message || "Failed to remove follower");
     }
   };
 
@@ -101,7 +104,7 @@ const UserListDialog = ({
           />
         </div>
 
-        <div className="space-y-1">
+        <div className="space-y-2">
           {filteredList.length > 0 ? (
             filteredList.map((u) => (
               <div
@@ -113,10 +116,11 @@ const UserListDialog = ({
                   className="flex items-center gap-3"
                   onClick={onClose}
                 >
-                  <Avatar className="w-12 h-12">
+                  <Avatar className="w-11 h-11">
                     <AvatarImage
                       src={u?.profilePicture || noProfile}
                       alt="profile"
+                      className="object-cover"
                     />
                     <AvatarFallback>
                       <img

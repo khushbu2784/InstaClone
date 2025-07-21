@@ -22,7 +22,6 @@ import Explore from "./Pages/Explore";
 import ResetPassword from "./Pages/ResetPassword";
 import VerifyEmail from "./Pages/VerifyEmail";
 import store from "./redux/store";
-import FullScreenLoader from "./components/FullScreenLoader";
 import axios from "axios";
 import { setPosts } from "./redux/postSlice";
 import NotFound from "./Pages/NotFound";

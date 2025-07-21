@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 const ResetPassword = () => {
   const { token } = useParams();
   const navigate = useNavigate();
-
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -31,9 +30,6 @@ const ResetPassword = () => {
       );
 
       toast.success(res.data.message);
-      // ❗ Clear any existing token cookie before redirecting to login
-      document.cookie =
-        "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
       navigate("/login");
     } catch (err) {
       toast.error(err?.response?.data?.message || "Reset failed");

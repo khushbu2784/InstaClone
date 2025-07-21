@@ -2,12 +2,10 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { setAuthUser, setSuggestedUsers } from "@/redux/authSlice";
-import { useNavigate } from "react-router-dom";
 
 const BlockedUsers = () => {
   const [blockedUsers, setBlockedUsers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth); // ✅ get logged-in user
 

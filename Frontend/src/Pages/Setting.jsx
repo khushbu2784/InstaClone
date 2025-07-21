@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { toast } from "sonner";
 import axios from "axios";
-import { LogOut, Pencil, ShieldOff, Users,Lock } from "lucide-react";
+import { LogOut, Pencil, ShieldOff, Users, Lock } from "lucide-react";
 import { setAuthUser } from "@/redux/authSlice";
 import { setSelectedPost, setPosts } from "@/redux/postSlice";
 import ThemeToggle from "@/components/ThemeToggle";
@@ -44,17 +44,11 @@ const Setting = () => {
       icon: <ShieldOff size={18} />,
       action: () => navigate("/setting/blocked"),
     },
-    {
-      label: "Switch Account",
-      icon: <Users size={18} />,
-      action: () => navigate("/switch"),
-    },
-    {
-      label: "Logout",
-      icon: <LogOut size={18} />,
-      action: handleLogout,
-      danger: true,
-    },
+    // {
+    //   label: "Switch Account",
+    //   icon: <Users size={18} />,
+    //   action: () => navigate("/switch"),
+    // },
     {
       label: "Change Password",
       icon: <Lock size={18} />, // ✅ Changed from ShieldOff to Lock
@@ -63,6 +57,12 @@ const Setting = () => {
     {
       label: "Theme",
       custom: true,
+    },
+    {
+      label: "Logout",
+      icon: <LogOut size={18} />,
+      action: handleLogout,
+      danger: true,
     },
   ];
 

@@ -1,25 +1,3 @@
-// import sendEmail from "./sendEmail.js";
-
-// export const sendVerifyEmail = async (email, userName, otpCode) => {
-//   const html = `
-//     <div style="font-family: Arial, sans-serif; padding: 20px;">
-//       <h2>Verify Your Email</h2>
-//       <p>Hi ${userName},</p>
-//       <p>Your OTP code is:</p>
-//       <h1 style="letter-spacing: 5px;">${otpCode}</h1>
-//       <p>This code will expire in 5 minutes.</p>
-//       <p>If you did not request this, please ignore this email.</p>
-//     </div>
-//   `;
-
-//   await sendEmail({
-//     to: String(email).trim(),
-//     subject: "Verify Your Email - InstaClone",
-//     html,
-//   });
-// };
-
-
 import sendEmail from "./sendEmail.js";
 
 export const sendVerifyEmail = async (email, userName, otpCode) => {

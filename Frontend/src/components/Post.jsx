@@ -24,14 +24,13 @@ import useFollowUnfollow from "@/hooks/useFollowUnfollow";
 
 const Post = ({ post, mode }) => {
   const { user } = useSelector((store) => store.auth);
+  const updatedUser = useSelector((store) => store.auth.user);
   const { posts } = useSelector((store) => store.post);
   const dispatch = useDispatch();
   const [openEdit, setOpenEdit] = useState(false);
   const [text, setText] = useState("");
   const [open, setOpen] = useState(false);
-  const [liked, setLiked] = useState(
-    user && post?.likes?.includes(user._id)
-  );
+  const [liked, setLiked] = useState(user && post?.likes?.includes(user._id));
   const [postLike, setPostLike] = useState(post.likes.length || 0);
   const [comment, setComment] = useState(post.comments || []);
   const [isBookmarked, setIsBookmarked] = useState(false);
@@ -68,6 +67,7 @@ const Post = ({ post, mode }) => {
       const action = liked ? "dislike" : "like";
       const res = await axios.get(
         `${import.meta.env.VITE_API_BASE_URL}/post/${post._id}/${action}`,
+        {},
         { withCredentials: true }
       );
       if (res.data.success) {
@@ -191,11 +191,11 @@ const Post = ({ post, mode }) => {
                 variant="ghost"
                 className="font-bold"
                 onClick={() => {
-                  toggleFollow(post.author._id);
+                  toggleFollow(post.author._id, user);
                   setMoreDialogOpen(false);
                 }}
               >
-                {user?.following?.includes(post.author._id)
+                {updatedUser?.following?.includes(post.author._id)
                   ? "Unfollow"
                   : "Follow"}
               </Button>
@@ -235,7 +235,9 @@ const Post = ({ post, mode }) => {
       <img
         src={post.image}
         alt="post"
-        className={`aspect-square object-cover my-2 ${mode === "model" ? "" : ""}`}
+        className={`aspect-square object-cover my-2 ${
+          mode === "model" ? "" : ""
+        }`}
       />
 
       {/* Action Icons */}
@@ -280,9 +282,7 @@ const Post = ({ post, mode }) => {
           {postLike} likes
         </span>
         <p className="text-sm">
-          <span className="font-semibold mr-2">
-            {post.author?.userName}
-          </span>
+          <span className="font-semibold mr-2">{post.author?.userName}</span>
           {post.caption}
         </p>
         {comment.length > 0 && (

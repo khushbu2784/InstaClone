@@ -60,7 +60,7 @@ const UploadStoryDialog = ({ open, setOpen }) => {
       {open && (
         <DialogClose asChild>
           <button
-            className="fixed top-6 right-6 z-50 text-white p-2"
+            className="fixed top-6 right-6 z-50 text-gray-900 dark:text-white p-2"
             aria-label="Close"
           >
             <X className="h-8 w-8" />
@@ -69,8 +69,16 @@ const UploadStoryDialog = ({ open, setOpen }) => {
       )}
 
       <DialogContent className="bg-white text-gray-900 dark:bg-gray-900 dark:text-white max-w-md mx-auto flex flex-col items-center justify-center gap-4 p-6 rounded-lg">
-        <DialogHeader className="font-bold text-xl text-center w-full">
+        <DialogHeader className="font-bold text-xl text-center sm:w-full w-1/2">
           Upload a Story
+          <DialogClose asChild>
+          <button
+            className="sm:hidden fixed top-2 right-2 z-50 text-gray-900 dark:text-white p-2"
+            aria-label="Close"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </DialogClose>
         </DialogHeader>
 
         <input
@@ -90,13 +98,13 @@ const UploadStoryDialog = ({ open, setOpen }) => {
         </Button>
 
         {/* Preview */}
-        <div className="w-full flex items-center justify-center">
+        <div className="w-full flex items-center justify-center mx-6">
           {preview &&
             (file?.type.startsWith("image") ? (
               <img
                 src={preview}
                 alt="story preview"
-                className="rounded-lg object-contain max-h-[400px] w-full"
+                className="rounded-lg object-contain sm:max-h-[400px] max-h-[250px] w-full"
               />
             ) : (
               <video

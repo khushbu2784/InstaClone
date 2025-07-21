@@ -2,8 +2,8 @@ import { User } from "../models/userModel.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken"
 import uploadToCloudinary from "../utils/cloudinary.js";
-import getDataUri from "../utils/datauri.js";
 import crypto from "crypto";
+import { getReceiverSocketId, io } from "../socket/socket.js";
 import sendEmail from "../utils/sendEmail.js";
 import { getResetToken } from "../utils/token.js";
 import { sendVerifyEmail } from "../utils/sendVerifyEmail.js";
@@ -153,9 +153,6 @@ export const login = async (req, res) => {
     const user = await User.findOne({ email }).select("+password");
     if (!user) return res.status(401).json({ message: "Incorrect email", success: false });
 
-    console.log("Entered password:", password);
-    console.log("Stored password from DB:", user.password);
-
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(401).json({ message: "Incorrect password", success: false });
@@ -174,12 +171,6 @@ export const login = async (req, res) => {
     user.password = undefined;
 
     return res
-      // .cookie("token", token, {
-      //   httpOnly: true,
-      //   sameSite: "lax",
-      //   secure: false,
-      //   maxAge: 1 * 24 * 60 * 60 * 1000,
-      // })
       .cookie("token", token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
@@ -210,7 +201,7 @@ export const forgotPassword = async (req, res) => {
   user.resetPasswordExpire = expire;
   await user.save();
 
-  const resetURL = `${import.meta.env.VITE_API_BASE_URL}/user/resetPassword/${token}`;
+  const resetURL = `${process.env.FRONTEND_URL}/resetPassword/${token}`;
   const html =
     `<div style="background-color: #f2f2f2; padding: 40px 0; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
     <table align="center" cellpadding="0" cellspacing="0" width="100%" style="max-width: 540px; background-color: #ffffff; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); overflow: hidden;">
@@ -311,7 +302,7 @@ export const resetPassword = async (req, res) => {
 
 export const changePassword = async (req, res) => {
   try {
-    const userId = req.id; // because you're using req.id from middleware
+    const userId = req.id; 
     const { oldPassword, newPassword } = req.body;
 
     if (!oldPassword || !newPassword) {
@@ -332,7 +323,7 @@ export const changePassword = async (req, res) => {
     user.password = hashedNewPassword;
     await user.save();
 
-    await sendPassChangeEmail(user.email, user.userName);
+    await sendPassChangeEmail(user);
 
     return res.status(200).json({ success: true, message: "Password changed successfully." });
   } catch (err) {
@@ -450,11 +441,9 @@ export const editProfile = async (req, res) => {
     let clouseResponse;
 
     if (profilePicture) {
-      const fileUri = getDataUri(profilePicture);
-      //  clouseResponse = await cloudinary.uploader.upload(fileUri)
       clouseResponse = await uploadToCloudinary(req.file.buffer);
-
     }
+
     const user = await User.findById(userId).select("-password");
     if (!user) {
       return res.status(404).json({
@@ -508,19 +497,15 @@ export const getSuggestedUsers = async (req, res) => {
 }
 
 export const search = async (req, res) => {
-  const query = req.query.query;
+  const query = req.query.query; 
   if (!query) return res.status(400).json({ error: "No query provided" });
 
   try {
     const me = await User.findById(req.id).select("blockedUsers blockedBy");
-
     if (!me) {
       return res.status(404).json({ success: false, message: "User not found" });
     }
-
     const blockedUserIds = [...me.blockedUsers, ...me.blockedBy];
-
-
     const users = await User.find({
       _id: { $nin: blockedUserIds },
       $or: [
@@ -528,8 +513,6 @@ export const search = async (req, res) => {
         { name: { $regex: query, $options: 'i' } }
       ]
     }).select("userName name profilePicture  bio");
-
-
     return res.status(200).json({ success: true, users });
   } catch (err) {
     console.error(err);
@@ -537,23 +520,18 @@ export const search = async (req, res) => {
   }
 };
 
-import { getReceiverSocketId, io } from "../socket/socket.js";
-
 export const followOrUnfollow = async (req, res) => {
   try {
     const own = req.id;
     const myfollowing = req.params.id;
-
     if (own === myfollowing) {
       return res.status(400).json({
         message: "You can't follow/unfollow yourself",
         success: false,
       });
     }
-
     const user = await User.findById(own);
     const targetUser = await User.findById(myfollowing);
-
     if (!user || !targetUser) {
       return res.status(404).json({
         message: "User not found",
@@ -562,7 +540,6 @@ export const followOrUnfollow = async (req, res) => {
     }
 
     const isFollowing = user.following.includes(myfollowing);
-
     if (isFollowing) {
       await Promise.all([
         User.updateOne({ _id: own }, { $pull: { following: myfollowing } }),
@@ -574,7 +551,7 @@ export const followOrUnfollow = async (req, res) => {
         User.updateOne({ _id: myfollowing }, { $push: { followers: own } }),
       ]);
 
-      // ✅ Real-time notification logic
+      //Real-time notification logic
       const userInfo = await User.findById(own).select("userName profilePicture");
       const targetSocketId = getReceiverSocketId(myfollowing);
 
@@ -588,7 +565,7 @@ export const followOrUnfollow = async (req, res) => {
       }
     }
 
-    // 🟢 Updated user data to reflect follow/unfollow changes
+    //Updated user data to reflect follow/unfollow changes
     const updatedUser = await User.findById(own).select("-password");
     const updatedTargetUser = await User.findById(myfollowing)
       .select("-password")
@@ -615,12 +592,12 @@ export const getFollowers = async (req, res) => {
   try {
     const profileUser = await User.findById(req.params.id).populate("followers", "userName profilePicture");
     const currentUser = await User.findById(req.id);
-
+    
     if (!profileUser || !currentUser) {
       return res.status(404).json({ success: false, message: "User not found" });
     }
 
-    // 🛡️ Combined blocked users logic
+    //Combined blocked users logic
     const blockedUserIds = [
       ...currentUser.blockedUsers,
       ...currentUser.blockedBy,
@@ -676,7 +653,6 @@ export const blockOrUnblockUser = async (req, res) => {
 
     const me = await User.findById(myId);
     const target = await User.findById(targetId);
-
     const isBlocked = me.blockedUsers.includes(targetId);
 
     if (isBlocked) {
@@ -709,7 +685,6 @@ export const blockOrUnblockUser = async (req, res) => {
 
 export const getBlockedUsers = async (req, res) => {
   try {
-    //console.log("req.id in getBlockedUsers:", req.id);
     const me = await User.findById(req.id).populate({
       path: "blockedUsers",
       select: "userName name profilePicture",
@@ -729,12 +704,10 @@ export const getBlockedUsers = async (req, res) => {
   }
 };
 
-
 export const removeFollower = async (req, res) => {
   try {
-    const currentUserId = req.id; // logged-in user
+    const currentUserId = req.id;
     const followerId = req.params.id;
-
     const currentUser = await User.findById(currentUserId);
     const followerUser = await User.findById(followerId);
 

@@ -5,7 +5,6 @@ import { Comment } from "../models/commentModel.js";
 import { getReceiverSocketId, io } from "../socket/socket.js";
 import uploadToCloudinary from "../utils/cloudinary.js";
 
-// Add new post
 export const addNewPost = async (req, res) => {
   try {
     const { caption } = req.body;
@@ -22,9 +21,8 @@ export const addNewPost = async (req, res) => {
       .toFormat("jpeg", { quality: 80 })
       .toBuffer();
 
-    // ✅ Upload to Cloudinary using helper
+    // ✅ Upload to Cloudinary using helper function
     const cloudResponse = await uploadToCloudinary(optimizedImageBuffer);
-
     const post = await Post.create({
       caption,
       image: cloudResponse.secure_url,
@@ -45,7 +43,7 @@ export const addNewPost = async (req, res) => {
       success: true,
     });
   } catch (err) {
-    console.error("🔴 Error in addNewPost:", err);
+    console.error("Error in addNewPost:", err);
     return res.status(500).json({
       message: "Internal Server Error",
       error: err.message,
@@ -53,22 +51,18 @@ export const addNewPost = async (req, res) => {
   }
 };
 
-// Get all posts
 export const getAllPost = async (req, res) => {
   try {
     if (!req.id) {
       return res.status(401).json({ success: false, message: "Unauthorized" });
     }
-
     const me = await User.findById(req.id).select("blockedUsers blockedBy");
     if (!me) {
       return res.status(404).json({ success: false, message: "User not found" });
     }
-
     const blockedUserIds = [...me.blockedUsers, ...me.blockedBy].map((id) =>
       id.toString()
     );
-
     const posts = await Post.find()
       .sort({ createdAt: -1 })
       .populate({ path: "author", select: "userName profilePicture" })
@@ -80,12 +74,10 @@ export const getAllPost = async (req, res) => {
           select: "userName profilePicture",
         },
       });
-
     const filteredPosts = posts.filter(
       (post) =>
         post.author && !blockedUserIds.includes(post.author._id.toString())
     );
-
     res.status(200).json({ posts: filteredPosts, success: true });
   } catch (err) {
     console.error("❌ Error in getAllPost:", err);
@@ -108,7 +100,6 @@ export const getUserPost = async (req, res) => {
           select: "userName profilePicture",
         },
       });
-
     res.status(200).json({ posts, success: true });
   } catch (err) {
     console.error(err);
@@ -122,8 +113,7 @@ export const likePost = async (req, res) => {
     const postId = req.params.id;
     const post = await Post.findById(postId);
 
-    if (!post)
-      return res.status(404).json({ message: "Post not found", success: false });
+    if (!post) return res.status(404).json({ message: "Post not found", success: false });
 
     const alreadyLiked = post.likes.includes(likeKrnewalaUserId);
 
@@ -157,7 +147,6 @@ export const likePost = async (req, res) => {
   }
 };
 
-// Dislike post
 export const disLikePost = async (req, res) => {
   try {
     const likeKrnewalaUserId = req.id;
@@ -253,11 +242,27 @@ export const deleteComment = async (req, res) => {
   }
 };
 
+// Get all comments of a post
+export const getCommentsOfPost = async (req, res) => {
+  try {
+    const postId = req.params.id;
+    const comments = await Comment.find({ post: postId }).populate("author", "userName profilePicture");
+
+    if (!comments) return res.status(404).json({ message: "No comments found", success: false });
+
+    return res.status(200).json({ success: true, comments });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: "Internal Server Error", error: err.message });
+  }
+};
+
 // Edit post caption
 export const updatePostCaption = async (req, res) => {
   try {
     const { caption } = req.body;
     const { id } = req.params;
+   // const id = req.params.id; both valid
 
     const post = await Post.findById(id)
       .populate("author", "userName profilePicture")
@@ -278,21 +283,6 @@ export const updatePostCaption = async (req, res) => {
     res.status(200).json({ success: true, updatedPost: post });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
-  }
-};
-
-// Get all comments of a post
-export const getCommentsOfPost = async (req, res) => {
-  try {
-    const postId = req.params.id;
-    const comments = await Comment.find({ post: postId }).populate("author", "userName profilePicture");
-
-    if (!comments) return res.status(404).json({ message: "No comments found", success: false });
-
-    return res.status(200).json({ success: true, comments });
-  } catch (err) {
-    console.error(err);
-    return res.status(500).json({ message: "Internal Server Error", error: err.message });
   }
 };
 
@@ -333,10 +323,7 @@ export const bookmarkPost = async (req, res) => {
     if (!post)
       return res.status(404).json({ message: "Post not found", success: false });
 
-    // ✅ Define user before using it
     const user = await User.findById(authorId);
-
-    // ✅ Safeguard if bookmarks is undefined
     if (!user.bookmarks) user.bookmarks = [];
 
     const isBookmarked = user.bookmarks.includes(post._id);
@@ -357,7 +344,7 @@ export const bookmarkPost = async (req, res) => {
       bookmarks: user.bookmarks,
     });
   } catch (err) {
-    console.error("🔴 Bookmark error:", err);
+    console.error("Bookmark error:", err);
     return res.status(500).json({ message: "Internal Server Error", error: err.message });
   }
 };
@@ -365,12 +352,9 @@ export const bookmarkPost = async (req, res) => {
 export const getExplorePosts = async (req, res) => {
   try {
     const currentUserId = req.id;
-
-    // Get blocked users
     const currentUser = await User.findById(currentUserId);
     const blockedUsers = currentUser?.blockedUsers || [];
 
-    // Find valid posts
     let posts = await Post.find({
       author: { $nin: [...blockedUsers, currentUserId] },
       isDeleted: { $ne: true }, // ✅ Exclude deleted posts
@@ -379,7 +363,7 @@ export const getExplorePosts = async (req, res) => {
       .sort({ createdAt: -1 })
       .limit(50);
 
-    // ✅ Filter out posts with deleted users (author=null after populate)
+    //Filter out posts with deleted users (author=null after populate)
     posts = posts.filter((post) => post.author !== null);
 
     res.status(200).json({ success: true, posts });

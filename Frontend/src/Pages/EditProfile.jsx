@@ -101,7 +101,7 @@ const EditProfile = () => {
           <div className="flex items-center gap-3">
             <Link to={`/profile/${user?._id}`}>
               <Avatar className="w-14 h-14">
-                <AvatarImage src={preview} />
+                <AvatarImage src={preview}  className="object-cover"/>
                 <AvatarFallback>
                   <img
                     src={noProfile}

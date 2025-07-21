@@ -145,7 +145,7 @@ const LeftSideBar = () => {
     {
       icon: (
         <Avatar className="w-8 h-8">
-          <AvatarImage src={user?.profilePicture} alt="@profile" />
+          <AvatarImage src={user?.profilePicture} alt="@profile" className="object-cover"/>
           <AvatarFallback>
             <img src={noProfile} alt="profile fallback" />
           </AvatarFallback>

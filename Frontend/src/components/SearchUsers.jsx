@@ -96,7 +96,7 @@ useEffect(() => {
               onClick={() => onOpenChange(false)}
             >
               <Avatar className="h-9 w-9">
-                <AvatarImage src={user.profilePicture} alt={user.userName} />
+                <AvatarImage src={user.profilePicture} alt={user.userName} className="object-cover"/>
                 <AvatarFallback>
                   <img src={noProfile} alt="fallback" />
                 </AvatarFallback>

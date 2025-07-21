@@ -65,7 +65,7 @@ const VerifyEmail = () => {
             />
 
             {status === "verifying" ? (
-              <div className="flex justify-center items-center gap-2">
+              <div className="flex justify-center items-center gap-2 bg-blue-200 px-4 py-2">
                 <Loader2 className="w-5 h-5 animate-spin text-blue-500" />
                 <p>Verifying...</p>
               </div>

@@ -22,7 +22,6 @@ const CreatePostDialog = ({
   const [caption, setCaption] = useState("");
   const [imagePreview, setImagePreview] = useState("");
   const [loading, setLoading] = useState(false);
-
   const { user } = useSelector((state) => state.auth);
   const { posts } = useSelector((state) => state.post);
   const dispatch = useDispatch();
@@ -97,7 +96,6 @@ const CreatePostDialog = ({
           withCredentials: true,
         }
       );
-
       if (res.data.success) {
         const updatedPost = res.data.updatedPost;
         dispatch(
@@ -135,9 +133,9 @@ const CreatePostDialog = ({
         {/* User Info */}
         <div className="flex gap-3 items-center mb-3">
           <Avatar>
-            <AvatarImage src={user?.profilePicture || noProfile} />
+            <AvatarImage src={user?.profilePicture || noProfile} className="object-cover"/>
             <AvatarFallback>
-              <img src={noProfile} alt="fallback" />
+              <img src={noProfile} alt="fallback" className="object-cover"/>
             </AvatarFallback>
           </Avatar>
           <div>

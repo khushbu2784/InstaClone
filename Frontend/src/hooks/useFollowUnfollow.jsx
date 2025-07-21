@@ -9,11 +9,22 @@ import { toast } from "sonner";
 
 const useFollowUnfollow = () => {
   const dispatch = useDispatch();
-
   const toggleFollow = async (targetUserId, currentUser, options = {}) => {
+    const isCurrentlyFollowing = currentUser.following.includes(targetUserId);
+    const updatedFollowing = isCurrentlyFollowing
+      ? currentUser.following.filter((id) => id !== targetUserId)
+      : [...currentUser.following, targetUserId];
+
+    const optimisticUser = { ...currentUser, following: updatedFollowing };
+    dispatch(setAuthUser(optimisticUser)); //Instant UI update
+    //Instant toast
+    toast.success(!isCurrentlyFollowing ? "Followed user" : "Unfollowed user");
+
     try {
       const res = await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}/user/followorunfollow/${targetUserId}`,
+        `${
+          import.meta.env.VITE_API_BASE_URL
+        }/user/followorunfollow/${targetUserId}`,
         {},
         {
           headers: { Authorization: `Bearer ${currentUser?.token}` },
@@ -28,23 +39,18 @@ const useFollowUnfollow = () => {
         dispatch(setAuthUser(updatedCurrentUser));
         dispatch(updateSuggestedUser(updatedTargetUser));
 
-        // ✅ Only update userProfile if explicitly required
         if (options.shouldUpdateProfile) {
           dispatch(setUserProfile(updatedTargetUser));
         }
 
-        const isFollowing = updatedCurrentUser.following.includes(
-          updatedTargetUser._id
-        );
-        toast.success(isFollowing ? "Followed user" : "Unfollowed user");
-
         return { updatedCurrentUser, updatedTargetUser };
       } else {
-        toast.error("Something went wrong");
+        throw new Error("API error");
       }
     } catch (error) {
-      console.error("Follow/Unfollow failed", error);
+      dispatch(setAuthUser(currentUser)); // Revert optimistic update
       toast.error("Failed to follow/unfollow user");
+      console.error("Follow/Unfollow failed", error);
     }
   };
 

@@ -110,6 +110,7 @@ const ChatPage = () => {
                     <AvatarImage
                       src={suggestedUser?.profilePicture || noProfile}
                       alt="profile"
+                      className="object-cover"
                     />
                     <AvatarFallback>
                       <img
@@ -149,6 +150,7 @@ const ChatPage = () => {
                 <AvatarImage
                   src={selectedUser?.profilePicture || noProfile}
                   alt="profile"
+                  className="object-cover"
                 />
                 <AvatarFallback>
                   <img

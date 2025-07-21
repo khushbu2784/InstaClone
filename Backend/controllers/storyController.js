@@ -1,18 +1,15 @@
-import uploadToCloudinary from "../utils/cloudinary.js"; // ✅ use the function
+import uploadToCloudinary from "../utils/cloudinary.js"; 
 import { Story } from "../models/storyModel.js";
 import { User } from "../models/userModel.js"
 
 export const addStory = async (req, res) => {
   try {
     const file = req.file;
-
     if (!file) {
       return res.status(400).json({ success: false, message: "No file uploaded" });
     }
-
     // ✅ Use file.buffer instead of file.path
     const result = await uploadToCloudinary(file.buffer, file.mimetype);
-
     const mimeType = file.mimetype;
     const mediaType = mimeType.startsWith("video") ? "video" : "image";
 
@@ -36,7 +33,6 @@ export const addStory = async (req, res) => {
 
 export const getAllStories = async (req, res) => {
   try {
-    // ✅ Get current user with block info and following list
     const currentUser = await User.findById(req.id).select(
       "userName profilePicture blockedUsers blockedBy following"
     );
@@ -91,4 +87,72 @@ export const getAllStories = async (req, res) => {
   }
 };
 
+export const addStoryView = async (req, res) => {
+  try {
+    const { storyId } = req.params;
+    const viewerId = req.id;
 
+    const story = await Story.findById(storyId);
+    if (!story) {
+      return res.status(404).json({ success: false, message: "Story not found" });
+    }
+
+    // ✅ Don't add the owner as viewer
+    if (
+      story.user.toString() !== viewerId &&
+      !story.viewedBy.includes(viewerId)
+    ) {
+      story.viewedBy.push(viewerId);
+      await story.save();
+    }
+
+    res.status(200).json({ success: true, message: "View recorded" });
+  } catch (error) {
+    console.error("Error adding story view:", error);
+    res.status(500).json({ success: false, message: "Failed to record view" });
+  }
+};
+
+export const getStoryViewers = async (req, res) => {
+  try {
+    const { storyId } = req.params;
+
+    const story = await Story.findById(storyId)
+      .populate("viewedBy", "userName profilePicture");
+
+    if (!story) {
+      return res.status(404).json({ success: false, message: "Story not found" });
+    }
+
+    if (story.user.toString() !== req.id) {
+      return res.status(403).json({ success: false, message: "Not authorized" });
+    }
+
+    res.status(200).json({ success: true, viewers: story.viewedBy });
+  } catch (error) {
+    console.error("Error fetching viewers:", error);
+    res.status(500).json({ success: false, message: "Failed to fetch viewers" });
+  }
+};
+
+export const deleteStory = async (req, res) => {
+  try {
+    const { storyId } = req.params;
+    const story = await Story.findById(storyId);
+
+    if (!story) {
+      return res.status(404).json({ success: false, message: "Story not found" });
+    }
+
+    if (story.user.toString() !== req.id) {
+      return res.status(403).json({ success: false, message: "Not authorized" });
+    }
+
+    await Story.findByIdAndDelete(storyId);
+
+    res.status(200).json({ success: true, message: "Story deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting story:", error);
+    res.status(500).json({ success: false, message: "Failed to delete story" });
+  }
+};

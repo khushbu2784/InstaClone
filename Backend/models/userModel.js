@@ -1,4 +1,3 @@
-// File: Backend/models/userModel.js
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
@@ -15,7 +14,7 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true,
-     select: false,
+    select: false,
   },
   profilePicture: {
     type: String,
@@ -23,7 +22,7 @@ const userSchema = new mongoose.Schema({
   },
   bio: {
     type: String,
-    default: ''
+    default: "No bio available."
   },
   gender: {
     type: String,

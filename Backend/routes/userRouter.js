@@ -1,6 +1,6 @@
 import express from "express";
 import {
-  editProfile, getProfile, getSuggestedUsers, login, logout, register,changePassword, followOrUnfollow, search, getFollowers, getFollowing, blockOrUnblockUser, getBlockedUsers,
+  editProfile, getProfile, getSuggestedUsers, login, logout, register, changePassword, followOrUnfollow, search, getFollowers, getFollowing, blockOrUnblockUser, getBlockedUsers,
   removeFollower, forgotPassword, resetPassword, verifyEmail, resendVerification
 } from "../controllers/userController.js";
 import isAuthenticated from "../middlewares/isAuthenticate.js";
@@ -24,7 +24,6 @@ router.get("/:id/following", isAuthenticated, getFollowing);
 router.post("/block/:id", isAuthenticated, blockOrUnblockUser);
 router.get("/blocked", isAuthenticated, getBlockedUsers);
 router.put("/removeFollower/:id", isAuthenticated, removeFollower);
-
 router.post("/forgotPassword", forgotPassword);
 router.post("/resetPassword/:token", resetPassword);
 

@@ -15,7 +15,7 @@ const PostPreviewModal = ({ open, setOpen, post }) => {
       <DialogContent className="max-w-lg w-[70%] p-0 bg-white dark:bg-gray-900 dark:text-white overflow-hidden">
         <DialogClose asChild>
           <button className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 dark:text-gray-300 dark:hover:text-white z-50">
-            <X className="sm:h-10 h-6" />
+            <X className="sm:h-10 h-3" />
           </button>
         </DialogClose>
 

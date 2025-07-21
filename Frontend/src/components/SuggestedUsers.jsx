@@ -17,20 +17,31 @@ const SuggestedUsers = () => {
     // Simulated delay (you can remove this if already handled in Redux)
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 1000);
+    }, 500);
     return () => clearTimeout(timer);
   }, []);
 
   const handleFollow = async (targetUserId) => {
-    const result = await toggleFollow(targetUserId);
+    const result = await toggleFollow(targetUserId, user);
+
     if (result?.updatedCurrentUser) {
-      dispatch(setAuthUser(result.updatedCurrentUser));
+      // Optimistically remove user from suggestions list
       const updatedSuggestions = suggestedUsers.filter(
         (u) => u?._id !== targetUserId
       );
       dispatch(setSuggestedUsers(updatedSuggestions));
     }
   };
+
+  //   const result = await toggleFollow(targetUserId);
+  //   if (result?.updatedCurrentUser) {
+  //     dispatch(setAuthUser(result.updatedCurrentUser));
+  //     const updatedSuggestions = suggestedUsers.filter(
+  //       (u) => u?._id !== targetUserId
+  //     );
+  //     dispatch(setSuggestedUsers(updatedSuggestions));
+  //   }
+  // };
 
   const filteredSuggestions = suggestedUsers.filter(
     (u) => u?._id !== user?._id && !user?.following.includes(u?._id)
@@ -78,7 +89,10 @@ const SuggestedUsers = () => {
             <div className="flex items-center gap-3">
               <Link to={`/profile/${u?._id}`}>
                 <Avatar className="h-10 w-10">
-                  <AvatarImage src={u.profilePicture} />
+                  <AvatarImage
+                    src={u.profilePicture}
+                    className="object-cover"
+                  />
                   <AvatarFallback>
                     <img src={noProfile} alt="fallback" />
                   </AvatarFallback>

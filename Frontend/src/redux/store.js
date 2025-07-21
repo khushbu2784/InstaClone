@@ -1,24 +1,3 @@
-// // store.js (very top - before any import)
-// if (import.meta.env.MODE === "development") {
-//   const originalConsole = { warn: console.warn, error: console.error };
-
-//   console.warn = (...args) => {
-//     if (
-//       args[0]?.includes?.("A non-serializable value") ||
-//       args[0]?.includes?.("redux-persist/createPersistoid")
-//     ) return;
-//     originalConsole.warn(...args);
-//   };
-
-//   console.error = (...args) => {
-//     if (
-//       args[0]?.includes?.("A non-serializable value") ||
-//       args[0]?.includes?.("redux-persist/createPersistoid")
-//     ) return;
-//     originalConsole.error(...args);
-//   };
-// }
-
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import authSlice from "./authSlice.js"
 import postSlice from "./postSlice.js"

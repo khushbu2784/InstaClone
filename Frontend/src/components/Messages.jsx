@@ -33,6 +33,7 @@ const Messages = ({ selectedUser }) => {
             <AvatarImage
               src={selectedUser?.profilePicture || noProfile}
               alt="profile"
+              className="object-cover"
             />
             <AvatarFallback>
               <img

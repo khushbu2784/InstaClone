@@ -23,8 +23,8 @@ export const sendMessage = async (req, res) => {
       senderId,
       receiverId,
       message,
-      conversationId: conversation._id,     // ✅ set conversationId
-      readBy: [senderId],                    // ✅ only sender has read
+      conversationId: conversation._id,     
+      readBy: [senderId],                   
     });
 
     conversation.message.push(newMessage._id);
@@ -49,7 +49,7 @@ export const getMessage = async (req, res) => {
   try {
     const currentUserId = req.id;
     const receiverId = req.params.id;
-
+    
     const conversation = await Conversation.findOne({
       participants: { $all: [currentUserId, receiverId] },
     }).populate({
@@ -61,7 +61,7 @@ export const getMessage = async (req, res) => {
       return res.status(200).json({ success: true, messages: [] });
     }
 
-    // ✅ Mark all messages as read by current user
+    //Mark all messages as read by current user
     await Message.updateMany(
       {
         _id: { $in: conversation.message },
@@ -72,7 +72,7 @@ export const getMessage = async (req, res) => {
       }
     );
 
-    // ✅ Re-fetch after marking as read
+    // Re-fetch after marking as read
     const updatedConversation = await Conversation.findById(conversation._id).populate({
       path: "message",
       options: { sort: { createdAt: 1 } },
