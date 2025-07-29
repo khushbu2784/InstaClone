@@ -14,21 +14,21 @@ const rtnSlice = createSlice({
       const { userId, postId, type } = action.payload;
       const now = Date.now(); // Always fresh timestamp
 
-      // 🗑️ Remove previous notification of the same type, user, and post
+      //Remove previous notification of the same type, user, and post
       state.allNotifications = state.allNotifications.filter(
         (n) => !(n.userId === userId && n.postId === postId && n.type === type)
       );
 
-      // 🆕 Add latest notification to the top
+      //Add latest notification to the top
       state.allNotifications.unshift({ ...action.payload, timestamp: now });
 
-      // 🔴 Count as unread only if after lastClearedAt
+      //Count as unread only if after lastClearedAt
       if (!state.lastClearedAt || now > state.lastClearedAt) {
         state.unreadCount += 1;
         state.badgeCleared = false;
       }
 
-      // 🔁 Show only types from unread notifications
+      //Show only types from unread notifications
       const recent = state.allNotifications.filter(
         (n) => !state.lastClearedAt || n.timestamp > state.lastClearedAt
       );
@@ -39,7 +39,7 @@ const rtnSlice = createSlice({
     clearNotificationBadge: (state) => {
       state.unreadCount = 0;
       state.badgeCleared = true;
-      state.lastClearedAt = Date.now();   // ✅ Track when cleared
+      state.lastClearedAt = Date.now();   //Track when cleared
       state.recentTypes = [];
     },
 

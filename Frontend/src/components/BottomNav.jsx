@@ -34,7 +34,7 @@ const BottomNav = ({ setCreateDialogOpen }) => {
         { icon: Home, action: "home" },
         { icon: Search, action: "search" },
         { icon: PlusSquare, action: "create" },
-        { icon: VideoIcon, action: "reel" },
+        { icon: VideoIcon, action: "reel" },  //may change icon 
         { icon: User, action: "profile" },
       ].map(({ icon: Icon, action }, index) => (
         <Icon

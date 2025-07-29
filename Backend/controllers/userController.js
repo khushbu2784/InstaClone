@@ -302,11 +302,14 @@ export const resetPassword = async (req, res) => {
 
 export const changePassword = async (req, res) => {
   try {
-    const userId = req.id; 
+    const userId = req.id;
     const { oldPassword, newPassword } = req.body;
 
     if (!oldPassword || !newPassword) {
-      return res.status(400).json({ success: false, message: "Both old and new passwords are required." });
+      return res.status(400).json({ message: "Both passwords are required" });
+    }
+    if (newPassword.length < 8 || !/\d/.test(newPassword) || !/\W/.test(newPassword)) {
+      return res.status(400).json({ message: "New password must be at least 8 characters, contain a number and a special character." });
     }
 
     const user = await User.findById(userId).select("+password");
@@ -497,7 +500,7 @@ export const getSuggestedUsers = async (req, res) => {
 }
 
 export const search = async (req, res) => {
-  const query = req.query.query; 
+  const query = req.query.query;
   if (!query) return res.status(400).json({ error: "No query provided" });
 
   try {
@@ -592,7 +595,7 @@ export const getFollowers = async (req, res) => {
   try {
     const profileUser = await User.findById(req.params.id).populate("followers", "userName profilePicture");
     const currentUser = await User.findById(req.id);
-    
+
     if (!profileUser || !currentUser) {
       return res.status(404).json({ success: false, message: "User not found" });
     }

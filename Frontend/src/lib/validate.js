@@ -1,5 +1,12 @@
 import { z } from "zod";
 
+const strongPassword = z
+  .string()
+  .min(8, "Password must be at least 8 characters")
+  .regex(/[0-9]/, "Must include a number")
+  .regex(/[^A-Za-z0-9]/, "Must include a special character");
+
+// Signup Schema
 export const signupSchema = z.object({
   userName: z
     .string({ required_error: "Username is required" })
@@ -11,21 +18,34 @@ export const signupSchema = z.object({
     .nonempty("Email is required")
     .email("Invalid email address"),
 
-  password: z
-    .string({ required_error: "Password is required" })
-    .nonempty("Password is required")
-    .min(6, "Password must be at least 6 characters"),
+  password: strongPassword,
 });
 
+// Login Schema
 export const loginSchema = z.object({
   email: z
     .string({ required_error: "Email is required" })
     .nonempty("Email is required")
     .email("Invalid email address"),
 
-  password: z
-    .string({ required_error: "Password is required" })
-    .nonempty("Password is required")
-    .min(6, "Password must be at least 6 characters"),
+  password: strongPassword,
+});
 
+// Reset Password Schema
+export const resetPasswordSchema = z
+  .object({
+    password: strongPassword,
+    confirmPassword: z.string({
+      required_error: "Confirm password is required",
+    }),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
+
+// Change Password Schema
+export const changePasswordSchema = z.object({
+  oldPassword: z.string().min(1, "Current password is required"),
+  newPassword: strongPassword,
 });

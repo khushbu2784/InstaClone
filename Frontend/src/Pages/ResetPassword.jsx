@@ -1,31 +1,29 @@
-import React, { useState } from "react";
+import React from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { resetPasswordSchema } from "@/lib/validate";
 import { toast } from "sonner";
-import instaLogo from "@/assets/Logo.png";
 import { Button } from "@/components/ui/button";
 
 const ResetPassword = () => {
   const { token } = useParams();
   const navigate = useNavigate();
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [loading, setLoading] = useState(false);
 
-  const handleResetPassword = async () => {
-    if (!password || !confirmPassword) {
-      return toast.error("All fields are required");
-    }
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm({
+    resolver: zodResolver(resetPasswordSchema),
+  });
 
-    if (password !== confirmPassword) {
-      return toast.error("Passwords do not match");
-    }
-
+  const onSubmit = async (data) => {
     try {
-      setLoading(true);
       const res = await axios.post(
         `${import.meta.env.VITE_API_BASE_URL}/user/resetPassword/${token}`,
-        { password },
+        { password: data.password },
         { withCredentials: true }
       );
 
@@ -33,47 +31,47 @@ const ResetPassword = () => {
       navigate("/login");
     } catch (err) {
       toast.error(err?.response?.data?.message || "Reset failed");
-    } finally {
-      setLoading(false);
     }
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100 px-4">
       <div className="w-full max-w-md bg-white rounded-xl shadow-lg p-6 space-y-6">
-        <div className="mt-6">
-          <img
-            src={instaLogo}
-            alt="Logo"
-            className="h-10 w-36 mb-10 mx-auto dark:invert"
-          />
-        </div>
-        <h2 className="text-pretty text-xl font-semibold mb-4">
-          Reset Password
-        </h2>
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="New password"
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-blue-400"
-        />
+        <h2 className="text-pretty text-2xl font-semibold mb-4">Reset Password</h2>
 
-        <input
-          type="password"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-          placeholder="Confirm new password"
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-blue-400"
-        />
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <div>
+            <input
+              type="password"
+              placeholder="New password"
+              {...register("password")}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-blue-400"
+            />
+            {errors.password && (
+              <p className="text-sm text-red-500 mt-1">{errors.password.message}</p>
+            )}
+          </div>
 
-        <Button
-          onClick={handleResetPassword}
-          className="bg-blue-500 text-white hover:bg-blue-600"
-          disabled={loading}
-        >
-          {loading ? "Resetting..." : "Reset Password"}
-        </Button>
+          <div>
+            <input
+              type="password"
+              placeholder="Confirm new password"
+              {...register("confirmPassword")}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-blue-400"
+            />
+            {errors.confirmPassword && (
+              <p className="text-sm text-red-500 mt-1">{errors.confirmPassword.message}</p>
+            )}
+          </div>
+
+          <Button
+            type="submit"
+            className="bg-blue-500 text-white hover:bg-blue-600"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? "Resetting..." : "Reset Password"}
+          </Button>
+        </form>
       </div>
     </div>
   );

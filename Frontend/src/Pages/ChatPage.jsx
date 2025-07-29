@@ -12,9 +12,7 @@ import { resetUnread } from "@/redux/chatSlice";
 
 const ChatPage = () => {
   const [textMessage, setTextMessage] = useState("");
-  const { user, suggestedUsers, selectedUser } = useSelector(
-    (store) => store.auth
-  );
+  const { user, suggestedUsers, selectedUser } = useSelector((store) => store.auth);
   const { onlineUsers, messages } = useSelector((store) => store.chat);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -32,7 +30,7 @@ const ChatPage = () => {
         `${import.meta.env.VITE_API_BASE_URL}/message/send/${receiverId}`,
         { textMessage },
         {
-          headers: { "Content-Type": "application/json" },
+          //headers: { "Content-Type": "application/json" },
           withCredentials: true,
         }
       );

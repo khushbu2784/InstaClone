@@ -14,7 +14,6 @@ const SuggestedUsers = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Simulated delay (you can remove this if already handled in Redux)
     const timer = setTimeout(() => {
       setLoading(false);
     }, 500);
@@ -32,16 +31,6 @@ const SuggestedUsers = () => {
       dispatch(setSuggestedUsers(updatedSuggestions));
     }
   };
-
-  //   const result = await toggleFollow(targetUserId);
-  //   if (result?.updatedCurrentUser) {
-  //     dispatch(setAuthUser(result.updatedCurrentUser));
-  //     const updatedSuggestions = suggestedUsers.filter(
-  //       (u) => u?._id !== targetUserId
-  //     );
-  //     dispatch(setSuggestedUsers(updatedSuggestions));
-  //   }
-  // };
 
   const filteredSuggestions = suggestedUsers.filter(
     (u) => u?._id !== user?._id && !user?.following.includes(u?._id)

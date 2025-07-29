@@ -18,13 +18,12 @@ const useGetAllMessage = () => {
         );
         if (res.data.success) {
           dispatch(setMessages(res.data.messages));
-          dispatch(resetUnread(selectedUser._id)); // ✅ clears unreadMap for that user
+          dispatch(resetUnread(selectedUser._id)); 
         }
       } catch (error) {
         console.error("Error fetching messages:", error);
       }
     };
-
     fetchAllMessages();
   }, [selectedUser]); // Run only when selectedUser._id changes
 };

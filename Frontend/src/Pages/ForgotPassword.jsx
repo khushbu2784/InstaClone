@@ -18,10 +18,10 @@ const EmailSentPopup = ({ email, onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+    <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div className="bg-white dark:bg-gray-900 rounded-[22px] px-6 py-6 w-[60%] max-w-sm text-center shadow-xl">
-        <h2 className="text-xl text-black dark:text-white mb-2">Email Sent</h2>
-        <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+        <h2 className="text-xl text-black mb-2">Email Sent</h2>
+        <p className="text-sm text-gray-700 leading-relaxed">
           We sent an email to{" "}
           <span className="font-semibold">{maskedEmail(email)} </span>
           with a link to get back into your account.
@@ -54,7 +54,7 @@ const ForgotPassword = () => {
       const res = await axios.post(
         `${import.meta.env.VITE_API_BASE_URL}/user/forgotPassword`,
         { email }
-      );
+      );  
       setShowConfirmation(true);
     } catch (err) {
       toast.error(err?.response?.data?.message || "Something went wrong");

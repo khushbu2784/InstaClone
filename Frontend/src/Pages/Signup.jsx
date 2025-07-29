@@ -77,6 +77,7 @@ const Signup = () => {
               className="w-full p-2 border border-gray-300 rounded"
               type="text"
               id="userName"
+              placeholder="Enter your username"
               {...register("userName")}
             />
             {errors.userName && (
@@ -98,6 +99,7 @@ const Signup = () => {
               className="w-full p-2 border border-gray-300 rounded"
               type="email"
               id="email"
+              placeholder="Enter your email"
               {...register("email")}
             />
             {errors.email && (
@@ -119,6 +121,7 @@ const Signup = () => {
               className="w-full p-2 border border-gray-300 rounded"
               type="password"
               id="password"
+              placeholder="Enter your password"
               {...register("password")}
             />
             {errors.password && (
@@ -130,14 +133,18 @@ const Signup = () => {
 
           {/* Submit */}
           <button
-            className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition duration-200 flex justify-center items-center"
+            className={`w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition duration-200 flex justify-center items-center  ${
+              isSubmitting
+                ? "bg-blue-300 cursor-not-allowed"
+                : "bg-blue-500 hover:bg-blue-600"
+            }`}
             type="submit"
             disabled={isSubmitting}
           >
             {isSubmitting ? (
               <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Please wait...
+                <Loader2 className="mr-2 h-4 w-4 animate-spin text-white" />
+                "Please wait..."
               </>
             ) : (
               "Sign Up"

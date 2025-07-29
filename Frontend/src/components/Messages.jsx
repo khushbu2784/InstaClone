@@ -46,7 +46,7 @@ const Messages = ({ selectedUser }) => {
           <span className="mt-1 font-semibold">{selectedUser?.userName}</span>
           <Link to={`/profile/${selectedUser?._id}`}>
             <Button
-              className="h-7 mt-2 bg-gray-300 text-black rounded-lg"
+              className="h-7 mt-2 bg-gray-300 text-black hover:bg-gray-300/50  dark:bg-gray-500 hover:dark:bg-gray-200/50 dark:text-gray-50 rounded-lg"
               variant="secondary"
             >
               View Profile

@@ -18,11 +18,7 @@ const useGetRTM = () => {
     if (!socket) return;
 
     const handleNewMessage = (newMessage) => {
-      console.log("📨 New message from:", newMessage.senderId);
       dispatch(setMessages([...messagesRef.current, newMessage]));
-
-      console.log("🔥 current chat:", selectedUser?._id);
-      console.log("🔥 incoming msg sender:", newMessage.senderId);
 
       if (newMessage.senderId !== selectedUser?._id) {
         dispatch(incrementUnread(newMessage.senderId));

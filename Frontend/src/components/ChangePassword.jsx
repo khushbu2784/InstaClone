@@ -1,33 +1,48 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { changePasswordSchema } from "@/lib/validate";
+import { toast } from "sonner";
 
 const ChangePassword = () => {
-  const [oldPassword, setOldPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [message, setMessage] = useState("");
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(changePasswordSchema),
+  });
 
-  const handleChangePassword = async (e) => {
-    e.preventDefault();
+  const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const onSubmit = async (data) => {
+    setLoading(true);
+    setMessage("");
     try {
       const res = await axios.put(
         `${import.meta.env.VITE_API_BASE_URL}/user/changePassword`,
-        { oldPassword, newPassword },
-        {
-          withCredentials: true,
-        }
+        data,
+        { withCredentials: true }
       );
+      toast.success("Password updated successfully!");
       setMessage(res.data.message);
-      setOldPassword("");
-      setNewPassword("");
+      reset();
     } catch (err) {
-      setMessage(err.response?.data?.message || "Something went wrong");
+      const errorMsg = err.response?.data?.message || "Something went wrong";
+      toast.error(errorMsg);
+      setMessage(errorMsg);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="flex justify-center items-center min-h-[80vh] px-4">
       <form
-        onSubmit={handleChangePassword}
+        onSubmit={handleSubmit(onSubmit)}
         className="w-full max-w-sm bg-white dark:bg-gray-900 dark:text-white border border-gray-200 dark:border-gray-800 rounded-2xl shadow-sm px-6 py-8 space-y-4"
       >
         <h2 className="text-xl font-bold text-center text-gray-900 dark:text-white">
@@ -38,26 +53,32 @@ const ChangePassword = () => {
           <input
             type="password"
             placeholder="Current password"
-            value={oldPassword}
-            onChange={(e) => setOldPassword(e.target.value)}
+            {...register("oldPassword")}
             className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-900 text-sm text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
             required
           />
+          {errors.oldPassword && (
+            <p className="text-red-500 text-sm">{errors.oldPassword.message}</p>
+          )}
+
           <input
             type="password"
             placeholder="New password"
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
+            {...register("newPassword")}
             className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-900 text-sm text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
             required
           />
+          {errors.newPassword && (
+            <p className="text-red-500 text-sm">{errors.newPassword.message}</p>
+          )}
         </div>
 
         <button
           type="submit"
+          disabled={loading}
           className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white text-sm font-semibold py-2 rounded-lg transition"
         >
-          Update Password
+          {loading ? "Updating..." : "Update Password"}
         </button>
 
         {message && (

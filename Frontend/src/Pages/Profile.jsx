@@ -15,15 +15,13 @@ import ProfileHeader from "@/components/ProfileHeader";
 
 const Profile = () => {
   const { id: userId } = useParams();
-  const { refetch, mutualFollowers, mutualCount, blocked } =
-    useGetUserProfile(userId);
+  const { refetch, mutualFollowers, mutualCount, blocked } = useGetUserProfile(userId);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { toggleFollow } = useFollowUnfollow();
   const { userProfile, user } = useSelector((store) => store.auth);
   const isLoggedInUserProfile = user?._id === userProfile?._id;
   const isBlockedByMe = blocked && !isLoggedInUserProfile;
-
   const [isFollow, setIsFollow] = useState(false);
   const [activeTab, setActiveTab] = useState("posts");
   const [showList, setShowList] = useState(false);
@@ -103,9 +101,7 @@ const Profile = () => {
       await refetch();
     } catch (err) {
       console.error("Error toggling block/unblock:", err);
-      toast.error(
-        "Something went wrong while trying to block/unblock the user."
-      );
+      toast.error("Something went wrong while trying to block/unblock the user.");
     }
   };
 
