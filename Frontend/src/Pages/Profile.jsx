@@ -7,11 +7,10 @@ import { setSelectedUser } from "@/redux/authSlice";
 import useGetUserProfile from "@/hooks/useGetUserProfile";
 import useFollowUnfollow from "@/hooks/useFollowUnfollow";
 import { toast } from "sonner";
-import { setSelectedPost } from "@/redux/postSlice";
-import PostPreviewModel from "@/components/PostPreviewModel";
-import UserListDialog from "@/components/UserListDialog";
-import ActionSheet from "@/components/ActionSheet";
-import ProfileHeader from "@/components/ProfileHeader";
+import PostPreviewModel from "@/components/post/PostPreviewModel";
+import UserListDialog from "@/components/profile/UserListDialog";
+import ActionSheet from "@/components/profile/ActionSheet";
+import ProfileHeader from "@/components/profile/ProfileHeader";
 
 const Profile = () => {
   const { id: userId } = useParams();

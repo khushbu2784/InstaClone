@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { Dialog, DialogTrigger, DialogContent } from "./ui/dialog";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Dialog, DialogTrigger, DialogContent } from "../ui/dialog";
 import {
   Bookmark,
   BookmarkCheck,
@@ -9,14 +9,14 @@ import {
   Send,
 } from "lucide-react";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "sonner";
 import axios from "axios";
 import { setPosts, setSelectedPost } from "@/redux/postSlice";
 import { setAuthUser } from "@/redux/authSlice";
-import { Badge } from "./ui/badge";
-import CommentDialog from "./CommentDialog";
+import { Badge } from "../ui/badge";
+import CommentDialog from "../comment/CommentDialog";
 import { Link } from "react-router-dom";
 import noProfile from "@/assets/Profile.png";
 import CreatePostDialog from "./CreatePostDialog";

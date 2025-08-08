@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { SearchIcon } from "lucide-react";
-import PostPreviewModel from "@/components/PostPreviewModel";
+import PostPreviewModel from "@/components/post/PostPreviewModel";
 import { Link } from "react-router-dom";
 import noProfile from "@/assets/Profile.png";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";

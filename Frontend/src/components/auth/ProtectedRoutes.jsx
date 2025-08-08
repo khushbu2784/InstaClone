@@ -9,7 +9,10 @@ const ProtectedRoutes = ({ children }) => {
     if (!user) {
       navigate("/login");
     }
-  }, []);
+  }, [user, navigate]);
+  
+  if (!user) return null; // optional: prevent rendering while redirecting
+
   return <>{children}</>;
 };
 

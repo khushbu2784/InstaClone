@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import LeftSideBar from "./LeftSideBar";
 import BottomNav from "./BottomNav";
-import CreatePostDialog from "./CreatePostDialog";
+import CreatePostDialog from "./post/CreatePostDialog";
 import SearchUsers from "./SearchUsers";
 import Topbar from "./TopBar";
 import FullScreenLoader from "./FullScreenLoader";

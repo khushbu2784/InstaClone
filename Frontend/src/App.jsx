@@ -11,7 +11,7 @@ import { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setSocket } from "./redux/socketSlice";
 import { setOnlineUsers } from "./redux/chatSlice";
-import ProtectedRoutes from "./components/ProtectedRoutes";
+import ProtectedRoutes from "./components/auth/ProtectedRoutes";
 import SuggestedUsers from "./components/SuggestedUsers";
 import BlockedUsers from "./components/BlockedUsers";
 import Setting from "./Pages/Setting";
@@ -25,7 +25,7 @@ import store from "./redux/store";
 import axios from "axios";
 import { setPosts } from "./redux/postSlice";
 import NotFound from "./Pages/NotFound";
-import ChangePassword from "./components/ChangePassword";
+import ChangePassword from "./components/auth/ChangePassword";
 
 const browserRouter = createBrowserRouter([
   {

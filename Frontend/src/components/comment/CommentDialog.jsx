@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Dialog, DialogContent, DialogTrigger, DialogClose } from "./ui/dialog";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { Dialog, DialogContent, DialogTrigger, DialogClose } from "../ui/dialog";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Link } from "react-router-dom";
 import { MoreHorizontal, X } from "lucide-react";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import Comment from "./Comment";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";

@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Dialog, DialogContent, DialogHeader } from "./ui/dialog";
-import { Avatar, AvatarImage, AvatarFallback } from "./ui/avatar";
-import { Textarea } from "./ui/textarea";
-import { Button } from "./ui/button";
+import { Dialog, DialogContent, DialogHeader } from "../ui/dialog";
+import { Avatar, AvatarImage, AvatarFallback } from "../ui/avatar";
+import { Textarea } from "../ui/textarea";
+import { Button } from "../ui/button";
 import { readFileAsDataURL } from "@/lib/utils";
 import { Loader2, X } from "lucide-react";
 import axios from "axios";
@@ -118,7 +118,7 @@ const CreatePostDialog = ({
     <Dialog open={open} className="">
       <DialogContent
         onInteractOutside={closeDialog}
-        className="bg-white dark:bg-gray-900 text-black dark:border-gray-600 dark:text-white outline-none max-w-[60vh] rounded-xl w-full sm:max-w-lg sm:rounded-xl max-h-[90vh] overflow-y-auto border shadow-md backdrop-blur-md mx-auto p-6"
+        className="bg-white dark:bg-gray-900 text-black dark:border-gray-600 dark:text-white outline-none max-w-[60vh] rounded-xl sm:w-[800px] w-[300px] sm:max-w-lg sm:rounded-xl max-h-[90vh] overflow-y-auto border shadow-md backdrop-blur-md mx-auto p-6"
       >
         {/* Header */}
         <div className="flex items-center justify-between mb-2">

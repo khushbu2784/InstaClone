@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Avatar, AvatarImage, AvatarFallback } from "./ui/avatar";
-import { Button } from "./ui/button";
-import { Badge } from "./ui/badge";
+import { Avatar, AvatarImage, AvatarFallback } from "../ui/avatar";
+import { Button } from "../ui/button";
+import { Badge } from "../ui/badge";
 import { AtSign, Settings } from "lucide-react";
 import noProfile from "@/assets/Profile.png";
 

@@ -17,7 +17,7 @@ import {
 import { toast } from "sonner";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
-import CreatePostDialog from "./CreatePostDialog";
+import CreatePostDialog from "./post/CreatePostDialog";
 import { setAuthUser } from "@/redux/authSlice";
 import { setPosts, setSelectedPost } from "@/redux/postSlice";
 import Logo from "@/assets/Logo.png";

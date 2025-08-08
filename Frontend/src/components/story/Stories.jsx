@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Dialog, DialogContent, DialogClose } from "./ui/dialog";
+import { Dialog, DialogContent, DialogClose } from "../ui/dialog";
 import { X, Eye, Trash2 } from "lucide-react";
 import UploadStoryDialog from "./UploadStoryDialog";
 import noProfile from "@/assets/Profile.png";
@@ -202,7 +202,7 @@ const Stories = () => {
           </>
         )}
 
-        <DialogContent className="dark:bg-gray-900 bg-white max-w-md w-full sm:mx-auto rounded-lg overflow-hidden ">
+        <DialogContent className="dark:bg-gray-900 bg-white sm:mx-auto rounded-lg overflow-hidden sm:w-[600px] w-[390px]">
           {selectedUser && (
             <div className="flex flex-col">
               <Link
@@ -259,7 +259,7 @@ const Stories = () => {
                 <div className="px-4 pt-2">
                   <p
                     onClick={() => fetchViewers(currentStory._id)}
-                    className="text-xs text-gray-500 hover:underline cursor-pointer flex items-center gap-1"
+                    className="text-xs text-gray-500 hover:text-gray-600 cursor-pointer flex items-center gap-1"
                   >
                     <Eye className="w-4 h-4" /> Viewed by {viewers.length}
                   </p>

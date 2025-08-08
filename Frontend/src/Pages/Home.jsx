@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Outlet } from "react-router-dom";
-import Feed from "@/components/Feed";
+import Feed from "@/components/post/Feed";
 import RightSideBar from "@/components/RightSideBar";
-import Stories from "@/components/Stories";
+import Stories from "@/components/story/Stories";
 import useGetAllPost from "@/hooks/useGetAllPost";
 import useGetSuggestedUser from "@/hooks/useGetSuggestedUser";
 

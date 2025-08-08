@@ -1,11 +1,11 @@
 // components/UserListDialog.jsx
 import { useState } from "react";
-import { Avatar, AvatarImage, AvatarFallback } from "./ui/avatar";
+import { Avatar, AvatarImage, AvatarFallback } from "../ui/avatar";
 import noProfile from "@/assets/Profile.png";
 import { SearchIcon, X } from "lucide-react";
 import { Link } from "react-router-dom";
 import useFollowUnfollow from "@/hooks/useFollowUnfollow";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import { toast } from "sonner";

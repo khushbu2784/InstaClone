@@ -3,7 +3,7 @@ import {
   Dialog,
   DialogContent,
   DialogClose,
-} from "./ui/dialog"; // ✅ Update path if needed
+} from "../ui/dialog"; // ✅ Update path if needed
 import { X } from "lucide-react";
 import Post from "./Post";
 

@@ -1,8 +1,8 @@
 // components/UploadStoryDialog.jsx
 import { useState, useRef } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogClose } from "./ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogClose } from "../ui/dialog";
 import { X } from "lucide-react";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import axios from "axios";
 import { toast } from "sonner";
 
@@ -68,8 +68,8 @@ const UploadStoryDialog = ({ open, setOpen }) => {
         </DialogClose>
       )}
 
-      <DialogContent className="bg-white text-gray-900 dark:bg-gray-900 dark:text-white max-w-md mx-auto flex flex-col items-center justify-center gap-4 p-6 rounded-lg">
-        <DialogHeader className="font-bold text-xl text-center sm:w-full w-1/2">
+      <DialogContent className="bg-white text-gray-900 dark:bg-gray-900 dark:text-white sm:w-[800px] w-[300px] max-w-md mx-auto flex flex-col items-center justify-center gap-4 p-6 rounded-lg">
+        <DialogHeader className="font-bold sm:text-xl text-lg text-center">
           Upload a Story
           <DialogClose asChild>
           <button
