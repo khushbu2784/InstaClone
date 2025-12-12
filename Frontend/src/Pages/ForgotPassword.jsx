@@ -4,7 +4,6 @@ import { toast } from "sonner";
 import { Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-// ✅ Custom Popup component
 const EmailSentPopup = ({ email, onClose }) => {
   const maskedEmail = (email) => {
     const [name, domain] = email.split("@");
@@ -19,9 +18,9 @@ const EmailSentPopup = ({ email, onClose }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div className="bg-white dark:bg-gray-900 rounded-[22px] px-6 py-6 w-[60%] max-w-sm text-center shadow-xl">
-        <h2 className="text-xl text-black mb-2">Email Sent</h2>
-        <p className="text-sm text-gray-700 leading-relaxed">
+      <div className="bg-white rounded-[22px] px-6 py-6 w-[60%] max-w-sm text-center shadow-xl">
+        <h2 className="bg-white text-xl text-black mb-2">Email Sent</h2>
+        <p className="bg-white text-sm text-gray-700 leading-relaxed">
           We sent an email to{" "}
           <span className="font-semibold">{maskedEmail(email)} </span>
           with a link to get back into your account.

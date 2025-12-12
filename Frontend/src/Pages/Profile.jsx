@@ -78,9 +78,20 @@ const Profile = () => {
     await refetch();
   };
 
+  // const handleFollowChange = ({ followersCount, followingCount }) => {
+  //   if (typeof followersCount === "number") setFollowersCount(followersCount);
+  //   if (typeof followingCount === "number") setFollowingCount(followingCount);
+  // };
+
   const handleFollowChange = ({ followersCount, followingCount }) => {
-    if (typeof followersCount === "number") setFollowersCount(followersCount);
-    if (typeof followingCount === "number") setFollowingCount(followingCount);
+    if (typeof followingCount === "number") {
+      setFollowingCount(followingCount);    // update this instantly
+    }
+
+    // followersCount should NEVER update instantly — only after refetch()
+    if (typeof followersCount === "number") {
+      setFollowersCount(followersCount);    // used only when removing follower
+    }
   };
 
   const handleMessageClick = () => {
@@ -218,11 +229,10 @@ const Profile = () => {
                 <span
                   key={tab.key}
                   onClick={() => setActiveTab(tab.key)}
-                  className={`flex items-center gap-1 cursor-pointer ${
-                    activeTab === tab.key
+                  className={`flex items-center gap-1 cursor-pointer ${activeTab === tab.key
                       ? "text-black dark:text-white border-b-2 border-black dark:border-white"
                       : "text-gray-500 dark:text-gray-400"
-                  }`}
+                    }`}
                 >
                   {tab.icon} {tab.label}
                 </span>
@@ -304,3 +314,4 @@ const Profile = () => {
 };
 
 export default Profile;
+

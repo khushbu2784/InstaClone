@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { setAuthUser, setSuggestedUsers } from "@/redux/authSlice";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import noProfile from "@/assets/Profile.png";
 
 const BlockedUsers = () => {
   const [blockedUsers, setBlockedUsers] = useState([]);
@@ -72,13 +74,22 @@ const BlockedUsers = () => {
             >
               <div
                 className="flex items-center gap-4 cursor-pointer"
-                //onClick={() => navigate(`/profile/${user._id}`)}
+              //onClick={() => navigate(`/profile/${user._id}`)}
               >
-                <img
+                {/* <img
                   src={user.profilePicture}
                   alt={user.userName}
                   className="w-10 h-10 rounded-full object-cover"
-                />
+                /> */}
+                <Avatar className="sm:h-12 sm:w-12 h-64 w-64">
+                  <AvatarImage
+                    src={user.profilePicture?.profilePicture}
+                    className="object-cover"
+                  />
+                  <AvatarFallback>
+                    <img src={noProfile} alt="fallback" />
+                  </AvatarFallback>
+                </Avatar>
                 <div>
                   <p className="font-medium">{user.userName}</p>
                   <p className="text-sm text-gray-500">{user.name}</p>
@@ -86,7 +97,7 @@ const BlockedUsers = () => {
               </div>
               <button
                 onClick={() => handleUnblock(user._id)}
-                className="px-3 py-1 text-sm bg-red-500 text-white rounded hover:bg-red-600"
+                className="px-3 py-2 text-md bg-red-500 text-white rounded hover:bg-red-600"
               >
                 Unblock
               </button>

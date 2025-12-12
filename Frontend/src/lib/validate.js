@@ -22,14 +22,38 @@ export const signupSchema = z.object({
 });
 
 // Login Schema
+// export const loginSchema = z.object({
+//   email: z
+//     .string({ required_error: "Email is required" })
+//     .nonempty("Email is required")
+//     .email("Invalid email address"),
+
+//   password: strongPassword,
+// });
+// Login Schema → accepts email OR username
 export const loginSchema = z.object({
   email: z
-    .string({ required_error: "Email is required" })
-    .nonempty("Email is required")
-    .email("Invalid email address"),
+    .string({ required_error: "Email or username is required" })
+    .nonempty("Email or username is required")
+    .refine(
+      (value) => {
+        // Accept username (no @ symbol, min 3 chars)
+        const isUsername = !value.includes("@") && value.length >= 3;
+
+        // Accept valid email
+        const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+
+        return isUsername || isEmail;
+      },
+      {
+        message: "Enter a valid email or username",
+      }
+    ),
 
   password: strongPassword,
 });
+
+
 
 // Reset Password Schema
 export const resetPasswordSchema = z
