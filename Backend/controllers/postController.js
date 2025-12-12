@@ -349,6 +349,30 @@ export const bookmarkPost = async (req, res) => {
   }
 };
 
+// export const getExplorePosts = async (req, res) => {
+//   try {
+//     const currentUserId = req.id;
+//     const currentUser = await User.findById(currentUserId);
+//     const blockedUsers = currentUser?.blockedUsers || [];
+
+//     let posts = await Post.find({
+//       author: { $nin: [...blockedUsers, currentUserId] },
+//       isDeleted: { $ne: true }, // ✅ Exclude deleted posts
+//     })
+//       .populate("author", "userName profilePicture")
+//       .sort({ createdAt: -1 })
+//       .limit(50);
+
+//     //Filter out posts with deleted users (author=null after populate)
+//     posts = posts.filter((post) => post.author !== null);
+
+//     res.status(200).json({ success: true, posts });
+//   } catch (err) {
+//     console.error("Explore error:", err);
+//     res.status(500).json({ success: false, message: err.message });
+//   }
+// };
+
 export const getExplorePosts = async (req, res) => {
   try {
     const currentUserId = req.id;
@@ -357,13 +381,21 @@ export const getExplorePosts = async (req, res) => {
 
     let posts = await Post.find({
       author: { $nin: [...blockedUsers, currentUserId] },
-      isDeleted: { $ne: true }, // ✅ Exclude deleted posts
+      isDeleted: { $ne: true },
     })
       .populate("author", "userName profilePicture")
+      .populate({
+        path: "comments",
+        options: { sort: { createdAt: -1 } }, // optional: sort comments
+        populate: {
+          path: "author",
+          select: "userName profilePicture",
+        },
+      })
       .sort({ createdAt: -1 })
       .limit(50);
 
-    //Filter out posts with deleted users (author=null after populate)
+    // Filter out posts where author is deleted
     posts = posts.filter((post) => post.author !== null);
 
     res.status(200).json({ success: true, posts });

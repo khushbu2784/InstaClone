@@ -21,6 +21,11 @@ export const register = async (req, res) => {
     const trimmedEmail = email.trim();
     const trimmedPassword = password.trim();
 
+    const existingUserName = await User.findOne({ userName });
+    if (existingUserName) {
+      return res.status(409).json({ message: "Username already taken", success: false });
+    }
+
     const existingUser = await User.findOne({ email: trimmedEmail });
     if (existingUser) {
       return res.status(409).json({ message: "Email already exists", success: false });
@@ -141,32 +146,100 @@ export const resendVerification = async (req, res) => {
   }
 };
 
+// export const login = async (req, res) => {
+//   try {
+//     const email = req.body.email?.trim();
+//     const password = req.body.password?.trim();
+
+//     if (!email || !password) {
+//       return res.status(401).json({ message: "Email and password are required.", success: false });
+//     }
+
+//     const user = await User.findOne({ email }).select("+password");
+//     if (!user) return res.status(401).json({ message: "Incorrect email", success: false });
+
+//     const isMatch = await bcrypt.compare(password, user.password);
+//     if (!isMatch) {
+//       return res.status(401).json({ message: "Incorrect password", success: false });
+//     }
+
+//     if (!user.isVerified) {
+//       return res.status(403).json({
+//         message: "Please verify your email before logging in.",
+//         success: false,
+//         unverified: true, // ✅ needed by frontend to trigger "resend" option
+//       });
+//     }
+
+//     const token = jwt.sign({ userId: user._id }, process.env.SECRET_KEY, { expiresIn: "7d" });
+
+//     user.password = undefined;
+
+//     return res
+//       .cookie("token", token, {
+//         httpOnly: true,
+//         secure: process.env.NODE_ENV === "production",
+//         sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+//         maxAge: 7 * 24 * 60 * 60 * 1000,
+//       })
+//       .status(200)
+//       .json({
+//         message: `Welcome ${user.userName}`,
+//         success: true,
+//         user,
+//       });
+
+//   } catch (err) {
+//     console.error("🔴 Login Error:", err);
+//     return res.status(500).json({ message: "Internal Server Error", success: false });
+//   }
+// };
+
 export const login = async (req, res) => {
   try {
-    const email = req.body.email?.trim();
+    const loginValue = req.body.email?.trim(); // this can be email OR username
     const password = req.body.password?.trim();
 
-    if (!email || !password) {
-      return res.status(401).json({ message: "Email and password are required.", success: false });
+    if (!loginValue || !password) {
+      return res.status(401).json({
+        message: "Email/Username and password are required.",
+        success: false
+      });
     }
 
-    const user = await User.findOne({ email }).select("+password");
-    if (!user) return res.status(401).json({ message: "Incorrect email", success: false });
+    // ✔ find using email OR username
+    const user = await User.findOne({
+      $or: [{ email: loginValue }, { userName: loginValue }]
+    }).select("+password");
+
+    if (!user) {
+      return res.status(401).json({
+        message: "Invalid email or username",
+        success: false
+      });
+    }
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(401).json({ message: "Incorrect password", success: false });
+      return res.status(401).json({
+        message: "Incorrect password",
+        success: false
+      });
     }
 
+    // email verify check
     if (!user.isVerified) {
       return res.status(403).json({
         message: "Please verify your email before logging in.",
         success: false,
-        unverified: true, // ✅ needed by frontend to trigger "resend" option
+        unverified: true,
+        email: user.email
       });
     }
 
-    const token = jwt.sign({ userId: user._id }, process.env.SECRET_KEY, { expiresIn: "7d" });
+    const token = jwt.sign({ userId: user._id }, process.env.SECRET_KEY, {
+      expiresIn: "7d",
+    });
 
     user.password = undefined;
 
@@ -186,7 +259,9 @@ export const login = async (req, res) => {
 
   } catch (err) {
     console.error("🔴 Login Error:", err);
-    return res.status(500).json({ message: "Internal Server Error", success: false });
+    return res
+      .status(500)
+      .json({ message: "Internal Server Error", success: false });
   }
 };
 
@@ -591,6 +666,82 @@ export const followOrUnfollow = async (req, res) => {
   }
 };
 
+// export const removeFollower = async (req, res) => {
+//   try {
+//     const currentUserId = req.id;
+//     const followerId = req.params.id;
+//     const currentUser = await User.findById(currentUserId);
+//     const followerUser = await User.findById(followerId);
+
+//     if (!currentUser || !followerUser) {
+//       return res.status(404).json({ message: "User not found" });
+//     }
+
+//     // Remove followerId from currentUser.followers
+//     currentUser.followers = currentUser.followers.filter(
+//       (id) => id.toString() !== followerId
+//     );
+
+//     // Remove currentUserId from followerUser.following
+//     followerUser.following = followerUser.following.filter(
+//       (id) => id.toString() !== currentUserId
+//     );
+
+//     await currentUser.save();
+//     await followerUser.save();
+
+//     res.status(200).json({
+//       message: "Follower removed successfully",
+//       updatedCurrentUser: currentUser,
+//       updatedFollowerUser: followerUser,
+//     });
+//   } catch (error) {
+//     console.error("Error removing follower:", error);
+//     res.status(500).json({ message: "Server error" });
+//   }
+// };
+
+export const removeFollower = async (req, res) => {
+  try {
+    const currentUserId = req.id;
+    const followerId = req.params.id;
+
+    const currentUser = await User.findById(currentUserId);
+    const followerUser = await User.findById(followerId);
+
+    if (!currentUser || !followerUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Remove followerId from currentUser.followers
+    currentUser.followers = currentUser.followers.filter(
+      (id) => id.toString() !== followerId
+    );
+
+    // Remove currentUserId from followerUser.following
+    followerUser.following = followerUser.following.filter(
+      (id) => id.toString() !== currentUserId
+    );
+
+    // Save both
+    await currentUser.save();
+    await followerUser.save();
+
+    // 🔥 RELOAD updated user (VERY IMPORTANT)
+    const updatedCurrent = await User.findById(currentUserId)
+      .populate("followers", "_id userName profilePicture")
+      .populate("following", "_id userName profilePicture");
+
+    return res.status(200).json({
+      message: "Follower removed successfully",
+      updatedCurrentUser: updatedCurrent, // always fresh & accurate
+    });
+  } catch (error) {
+    console.error("Error removing follower:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
 export const getFollowers = async (req, res) => {
   try {
     const profileUser = await User.findById(req.params.id).populate("followers", "userName profilePicture");
@@ -707,38 +858,5 @@ export const getBlockedUsers = async (req, res) => {
   }
 };
 
-export const removeFollower = async (req, res) => {
-  try {
-    const currentUserId = req.id;
-    const followerId = req.params.id;
-    const currentUser = await User.findById(currentUserId);
-    const followerUser = await User.findById(followerId);
 
-    if (!currentUser || !followerUser) {
-      return res.status(404).json({ message: "User not found" });
-    }
-
-    // Remove followerId from currentUser.followers
-    currentUser.followers = currentUser.followers.filter(
-      (id) => id.toString() !== followerId
-    );
-
-    // Remove currentUserId from followerUser.following
-    followerUser.following = followerUser.following.filter(
-      (id) => id.toString() !== currentUserId
-    );
-
-    await currentUser.save();
-    await followerUser.save();
-
-    res.status(200).json({
-      message: "Follower removed successfully",
-      updatedCurrentUser: currentUser,
-      updatedFollowerUser: followerUser,
-    });
-  } catch (error) {
-    console.error("Error removing follower:", error);
-    res.status(500).json({ message: "Server error" });
-  }
-};
 
